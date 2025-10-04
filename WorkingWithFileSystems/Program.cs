@@ -32,6 +32,8 @@ namespace WorkingWithFileSystems
              arg1: GetFolderPath(SpecialFolder.Personal));
 
 
+
+            #region Managing Drives
             // manage Drives
 
             SectionTitle("Managing drives");
@@ -62,6 +64,9 @@ namespace WorkingWithFileSystems
 
             }
 
+            #endregion
+
+            #region Managing directories
             // managing directories
 
             SectionTitle("Managing directories");
@@ -80,6 +85,89 @@ namespace WorkingWithFileSystems
             WriteLine("Deleting it...");
             Delete(newFolder,recursive: true);
             WriteLine($"Does it exist? {Path.Exists(newFolder)}");
+            #endregion
+
+            #region Managing files
+
+            SectionTitle("Managing files");
+            // define   directory Path
+            string  dir = Combine(GetFolderPath(SpecialFolder.Personal), "OutputFiles.");
+
+            // create directory
+            CreateDirectory(dir);
+
+            // define file Path
+            string textfile = Combine(dir, "textFile.txt");
+            string backupfile = Combine(dir, "backupFile.bak");
+
+            // Check if textfile exists
+            WriteLine($"Does TextFile Exists? {Path.Exists(textfile)}");
+
+            // create a new text file and write a line to it
+            StreamWriter sw = File.CreateText(textfile);
+            sw.WriteLine("Hello World!");
+            sw.Close();
+
+            // Check if textfile exists
+            WriteLine($"Does TextFile Exists? {Path.Exists(textfile)}");
+
+            // copy the file, and overwrite if it already exists
+            File.Copy(textfile, backupfile, true);
+
+            // Check if backupfile exists
+            WriteLine($"Does Backup file Exists? {Path.Exists(backupfile)}");
+
+            Write("Confirm the files exist, and then press ENTER: ");
+            ReadLine();
+            // delete file
+            File.Delete(textfile);
+            WriteLine($"Does TextFile Exists? {Path.Exists(textfile)}");
+
+            // read from the text file backup
+            WriteLine($"Does TextFile Exists? {Path.Exists(backupfile)}");
+
+            StreamReader sr = File.OpenText(backupfile);
+            WriteLine(sr.ReadToEnd());
+            sr.Close();
+
+            #endregion
+
+            #region Manging Path
+
+            SectionTitle("Manging Path");
+
+            WriteLine($"Folder Name : {GetDirectoryName("backupFile")}");
+            WriteLine($"File Name : {GetFileName("TextFile.txt")}");
+            WriteLine($"File Name without extension : {GetFileNameWithoutExtension("TextFile.txt")}");
+            WriteLine($"File Extension : {GetExtension("TextFile.txt")}");
+            WriteLine($"Get random file name : {GetRandomFileName()}");
+            WriteLine($"Get temp file name : {GetTempFileName()}");
+            #endregion
+
+
+            #region Get File Infromation
+
+            SectionTitle("Getting file information");
+            FileInfo fileInfo = new FileInfo("backupFile.bak");
+            WriteLine($"File Name : {fileInfo.Name}");
+            WriteLine($"File Extension : {fileInfo.Extension}");
+            
+            // WriteLine($"File Size : {fileInfo.Length}");
+            WriteLine($"File Creation Time : {fileInfo.CreationTime}");
+            WriteLine($"File Last Access Time : {fileInfo.LastAccessTime}");
+            WriteLine($"File Last Write Time : {fileInfo.LastWriteTime}");
+            WriteLine($"File Directory : {fileInfo.Directory}");
+            WriteLine($"File Directory Name : {fileInfo.DirectoryName}");
+            WriteLine($"Does the file read only? {fileInfo.IsReadOnly}");
+
+
+            #endregion
+
+            #region Controlling how to work with files
+
+            FileStream file = File.Open(backupfile, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+            #endregion
             ReadKey();
         }
     }
